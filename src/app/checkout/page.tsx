@@ -26,15 +26,17 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Use Zustand's built-in persist hydration API
-  const [isHydrated, setIsHydrated] = useState(
-    useCartStore.persist.hasHydrated()
-  );
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // If not already hydrated, subscribe to the hydration finish event
-    if (!useCartStore.persist.hasHydrated()) {
-      const unsub = useCartStore.persist.onFinishHydration(() => {
+    
+    // Check if store is already hydrated
+    if (useCartStore.persist?.hasHydrated()) {
+      setIsHydrated(true);
+    } else {
+      // If not already hydrated, subscribe to the hydration finish event
+      const unsub = useCartStore.persist?.onFinishHydration(() => {
         setIsHydrated(true);
       });
       return unsub;
